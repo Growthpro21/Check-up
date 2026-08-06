@@ -3,809 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finanças 2.0 - Assuma o Controle do Seu Dinheiro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <title>Gerar Pix — Mercado Pago</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary: #10b981;
-            --primary-dark: #059669;
-            --dark: #0f172a;
-            --light: #f8fafc;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --card-bg: #ffffff;
-            --border: #e2e8f0;
-            --radius: 16px;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background-color: var(--light);
-            color: var(--text-main);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Navbar */
-        header {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 16px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            letter-spacing: -0.5px;
-        }
-
-        .logo i {
-            color: var(--primary);
-        }
-
-        .btn-cta {
-            background: var(--primary);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
-            text-align: center;
-        }
-
-        .btn-cta:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 140px 24px 60px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
-        }
-
-        .hero-text {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .hero-text h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            line-height: 1.15;
-            color: var(--dark);
-            margin-bottom: 20px;
-            letter-spacing: -1px;
-        }
-
-        .hero-text h1 span {
-            color: var(--primary);
-        }
-
-        .hero-text p {
-            font-size: 1.05rem;
-            color: var(--text-muted);
-            margin-bottom: 32px;
-            line-height: 1.6;
-        }
-
-        .hero-image {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-
-        .hero-image img {
-            width: 100%;
-            max-width: 550px;
-            height: auto;
-            border-radius: var(--radius);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-            object-fit: cover;
-        }
-
-        /* Banner de Urgência (Cronômetro) */
-        .promo-banner {
-            background: var(--dark);
-            color: white;
-            padding: 20px 24px;
-            position: relative;
-        }
-
-        .promo-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .promo-text {
-            font-size: 1rem;
-            font-weight: 500;
-            text-align: center;
-        }
-
-        .promo-text span {
-            color: #f59e0b;
-            font-weight: 700;
-        }
-
-        .countdown {
-            display: flex;
-            gap: 8px;
-        }
-
-        .countdown-item {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 6px 12px;
-            border-radius: 8px;
-            min-width: 55px;
-            text-align: center;
-        }
-
-        .countdown-time {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: block;
-            line-height: 1.2;
-        }
-
-        .countdown-label {
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            color: #94a3b8;
-            display: block;
-        }
-
-        /* Features Section */
-        .features {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 80px 24px;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 48px;
-            padding: 0 10px;
-        }
-
-        .section-title h2 {
-            font-size: 2rem;
-            color: var(--dark);
-            font-weight: 800;
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-        }
-
-        .section-title p {
-            color: var(--text-muted);
-            font-size: 1rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            padding: 28px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-        }
-
-        .feature-icon {
-            width: 46px;
-            height: 46px;
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-        }
-
-        .feature-card h3 {
-            font-size: 1.15rem;
-            color: var(--dark);
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .feature-card p {
-            color: var(--text-muted);
-            line-height: 1.55;
-            font-size: 0.9rem;
-        }
-
-        /* Showcase Interno */
-        .showcase {
-            background: #f1f5f9;
-            padding: 80px 24px;
-        }
-
-        .showcase-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 48px;
-            align-items: center;
-        }
-
-        .showcase-content h2 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            margin-bottom: 24px;
-            color: var(--dark);
-            letter-spacing: -0.5px;
-        }
-
-        .step {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .step-num {
-            width: 28px;
-            height: 28px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.85rem;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .step-text h4 {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: var(--dark);
-        }
-
-        .step-text p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .showcase-image {
-            display: flex;
-            justify-content: center;
-        }
-
-        .showcase-image img {
-            width: 100%;
-            max-width: 500px;
-            height: auto;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-        }
-
-        /* Pricing Section */
-        .pricing {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 80px 24px;
-        }
-
-        .price-card {
-            background: var(--dark);
-            color: white;
-            max-width: 440px;
-            margin: 0 auto;
-            padding: 40px 28px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
-            position: relative;
-            width: 100%;
-        }
-
-        .badge {
-            background: var(--primary);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            position: absolute;
-            top: -13px;
-            left: 50%;
-            transform: translateX(-50%);
-            letter-spacing: 0.5px;
-        }
-
-        .price-card h3 {
-            font-size: 1.35rem;
-            margin-bottom: 12px;
-        }
-
-        .old-price {
-            text-decoration: line-through;
-            color: #64748b;
-            font-size: 1.1rem;
-        }
-
-        .current-price {
-            font-size: 3rem;
-            font-weight: 800;
-            color: white;
-            margin: 6px 0 20px 0;
-            letter-spacing: -1px;
-        }
-
-        .current-price span {
-            font-size: 0.95rem;
-            color: #94a3b8;
-            font-weight: 400;
-            letter-spacing: 0;
-        }
-
-        .price-features {
-            list-style: none;
-            text-align: left;
-            margin-bottom: 28px;
-        }
-
-        .price-features li {
-            padding: 10px 0;
-            border-bottom: 1px solid #334155;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.9rem;
-            color: #cbd5e1;
-        }
-
-        .price-features li i {
-            color: var(--primary);
-            font-size: 0.95rem;
-        }
-
-        .btn-buy {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: #25d366;
-            color: white;
-            padding: 14px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: background 0.3s, transform 0.2s;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
-        }
-
-        .btn-buy:hover {
-            background: #20ba5a;
-            transform: translateY(-2px);
-        }
-
-        /* FAQ Section */
-        .faq {
-            max-width: 750px;
-            margin: 0 auto;
-            padding: 20px 24px 100px 24px;
-        }
-
-        .faq-item {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 12px;
-            overflow: hidden;
-        }
-
-        .faq-trigger {
-            padding: 18px 20px;
-            width: 100%;
-            background: transparent;
-            border: none;
-            text-align: left;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--dark);
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .faq-content {
-            padding: 0 20px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), padding 0.3s ease;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            line-height: 1.55;
-        }
-
-        .faq-item.active .faq-content {
-            padding: 0 20px 18px 20px;
-            max-height: 1000px;
-        }
-
-        .faq-trigger i {
-            transition: transform 0.3s, color 0.3s;
-            font-size: 0.85rem;
-            flex-shrink: 0;
-        }
-
-        .faq-item.active i {
-            transform: rotate(180deg);
-            color: var(--primary);
-        }
-
-        /* Footer Discreto, Elegante e Centralizado */
-        footer {
-            background: #0b0f19;
-            color: #475569;
-            padding: 30px 24px;
-            font-size: 0.8rem;
-            border-top: 1px solid #1e293b;
-        }
-
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .footer-links a {
-            color: #475569;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: #94a3b8;
-        }
-
-        /* --- MEDIA QUERIES RESPONSIVAS --- */
-        @media (max-width: 992px) {
-            .hero {
-                grid-template-columns: 1fr;
-                text-align: center;
-                padding-top: 110px;
-                gap: 32px;
-            }
-            .hero-text h1 {
-                font-size: 2.4rem;
-            }
-            .hero-text p {
-                margin-bottom: 24px;
-            }
-            .hero-text .btn-cta {
-                align-self: center;
-            }
-            .showcase-container {
-                grid-template-columns: 1fr;
-                gap: 32px;
-                text-align: center;
-            }
-            .step {
-                text-align: left;
-                max-width: 550px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .nav-container {
-                padding: 12px 16px;
-            }
-            .logo {
-                font-size: 1rem;
-            }
-            .btn-cta {
-                padding: 8px 14px;
-                font-size: 0.8rem;
-            }
-            .hero {
-                padding-left: 16px;
-                padding-right: 16px;
-            }
-            .hero-text h1 {
-                font-size: 1.9rem;
-            }
-            .hero-text p {
-                font-size: 0.95rem;
-            }
-            .promo-banner {
-                padding: 16px;
-            }
-            .promo-text {
-                font-size: 0.85rem;
-                width: 100%;
-            }
-            .countdown {
-                width: 100%;
-                justify-content: center;
-            }
-            .section-title h2 {
-                font-size: 1.6rem;
-            }
-            .section-title p {
-                font-size: 0.9rem;
-            }
-            .price-card {
-                padding: 35px 20px;
-            }
-            .current-price {
-                font-size: 2.5rem;
-            }
-            .footer-container {
-                flex-direction: column;
-                text-align: center;
-                gap: 12px;
-            }
-            .footer-links {
-                justify-content: center;
-            }
-        }
+        * {margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,sans-serif;}
+        :root {--mp-azul:#009EE3; --sucesso:#00B52F; --erro:#F44336; --cinza:#F5F5F5; --borda:#E0E0E0; --branco:#FFF;}
+        body {background:linear-gradient(135deg,#E3F2FD,#BBDEFB);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+        .cartao {background:var(--branco);border-radius:20px;padding:30px;width:100%;max-width:420px;box-shadow:0 8px 24px rgba(0,0,0,.12);}
+        .logo {font-size:26px;font-weight:900;color:var(--mp-azul);text-align:center;margin-bottom:5px;}
+        .subtitulo {text-align:center;color:#666;margin-bottom:25px;}
+        .etiqueta {font-size:15px;font-weight:600;color:#333;margin-bottom:8px;display:block;}
+        .campo {width:100%;padding:15px;border:2px solid var(--borda);border-radius:12px;font-size:17px;margin-bottom:18px;outline:none;}
+        .campo:focus {border-color:var(--mp-azul);}
+        .botao {width:100%;padding:17px;background:var(--mp-azul);color:white;border:none;border-radius:12px;font-size:18px;font-weight:700;cursor:pointer;}
+        .botao:hover {background:#008CDB;}
+        .botao:disabled {opacity:.6;cursor:not-allowed;}
+        .resultado {margin-top:25px;display:none;animation:aparecer .4s ease;}
+        .resultado.mostrar {display:block;}
+        @keyframes aparecer {from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+        .caixa-qr {background:var(--cinza);border-radius:16px;padding:20px;text-align:center;}
+        .qr-img {width:220px;height:220px;margin:15px auto;background:white;border-radius:12px;padding:10px;}
+        .qr-img img {width:100%;height:100%;border-radius:8px;}
+        .codigo-pix {background:white;border:1px solid var(--borda);border-radius:10px;padding:14px;font-size:13px;word-break:break-all;margin:15px 0;font-family:monospace;}
+        .btn-copiar {background:var(--sucesso);color:white;border:none;padding:14px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;width:100%;}
+        .valor-pix {font-size:24px;font-weight:800;color:var(--mp-azul);margin-top:8px;}
+        .erro {background:#FFEBEE;color:var(--erro);padding:14px;border-radius:10px;margin-top:16px;display:none;text-align:center;}
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="nav-container">
-            <div class="logo"><i class="fas fa-crown"></i> FINANÇAS 2.0</div>
-            <a href="#preco" class="btn-cta">Garantir Meu Acesso</a>
-        </div>
-    </header>
+<div class="cartao">
+    <div class="logo">mercado pago</div>
+    <p class="subtitulo">Gerar Pix — QR Code + Código</p>
 
-    <section class="hero">
-        <div class="hero-text">
-            <h1>O controle definitivo sobre as suas <span>Finanças Pessoais</span></h1>
-            <p>Pare de se perguntar para onde foi o seu dinheiro no fim do mês. Injete aportes, gerencie investimentos, liste suas compras de mercado em tempo real e baixe comprovantes organizados com um único clique.</p>
-            <a href="#preco" class="btn-cta" style="padding: 14px 28px; font-size: 0.95rem; align-self: flex-start;">Quero Mudar Minha Vida Financeira</a>
-        </div>
-        <div class="hero-image">
-            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80" alt="Dashboard do Finanças 2.0">
-        </div>
-    </section>
+    <label class="etiqueta">Nome do Produto</label>
+    <input type="text" id="descricao" class="campo" placeholder="Ex: Produto Digital">
 
-    <div class="promo-banner">
-        <div class="promo-container">
-            <div class="promo-text">🔥 <strong>OFERTA DE LANÇAMENTO:</strong> Licença Vitalícia com <span>60% DE DESCONTO</span> expira em:</div>
-            <div class="countdown">
-                <div class="countdown-item"><span class="countdown-time" id="horas">00</span><span class="countdown-label">Horas</span></div>
-                <div class="countdown-item"><span class="countdown-time" id="minutos">00</span><span class="countdown-label">Min</span></div>
-                <div class="countdown-item"><span class="countdown-time" id="segundos">00</span><span class="countdown-label">Seg</span></div>
+    <label class="etiqueta">Valor R$</label>
+    <input type="number" id="valor" class="campo" placeholder="0,00" step="0.01">
+
+    <button class="botao" id="btnGerar" onclick="gerarPix()">
+        <i class="fas fa-magic"></i> Gerar Pix
+    </button>
+
+    <div class="erro" id="caixaErro"></div>
+
+    <div class="resultado" id="caixaPix">
+        <div class="caixa-qr">
+            <strong style="font-size:17px;color:var(--sucesso);">✅ PIX GERADO COM SUCESSO!</strong>
+            <div class="valor-pix" id="valorExibido">R$ 0,00</div>
+            
+            <div class="qr-img" id="qrCode">
+                <span style="color:#999;">Carregando...</span>
             </div>
+
+            <label class="etiqueta" style="margin-top:15px;">📋 Código Pix — Copia e Cola</label>
+            <div class="codigo-pix" id="codigoPix"></div>
+            
+            <button class="btn-copiar" onclick="copiarCodigo()">
+                <i class="fas fa-copy"></i> COPIAR CÓDIGO PIX
+            </button>
         </div>
     </div>
+</div>
 
-    <section class="features">
-        <div class="section-title">
-            <h2>Tudo o que você precisa em um só lugar</h2>
-            <p>Esqueça planilhas complexas cheias de fórmulas travadas. Veja o poder do Finanças 2.0.</p>
-        </div>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-shopping-basket"></i></div>
-                <h3>Lista de Compras Inteligente</h3>
-                <p>Adicione itens dinamicamente (como biscoito, peixe ou o rancho do mês). O sistema soma tudo de forma exata e desconta direto do seu caixa ativo de forma unificada.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-file-download"></i></div>
-                <h3>Emissão de Comprovantes</h3>
-                <p>Baixe relatórios detalhados das suas listas de compras e fechamentos em formato de texto físico direto no seu computador para controle ou envio.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-rocket"></i></div>
-                <h3>Multiplicador de Investimentos</h3>
-                <p>Simule aportes com rendimentos percentuais e realize resgates parciais ou totais calculando a rentabilidade em tempo real com gráficos interativos.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-hand-holding-heart"></i></div>
-                <h3>Quitação de Compromissos</h3>
-                <p>Registre seus credores e abata valores aos poucos com réguas de progresso visuais automáticas que mostram o quanto você já pagou.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-moon"></i></div>
-                <h3>Visual Adaptativo (Dark Mode)</h3>
-                <p>Altere a paleta de cores entre o modo claro e escuro de forma confortável para proteção visual com persistência inteligente de dados localmente.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-                <h3>Privacidade 100% Blindada</h3>
-                <p>Seus dados financeiros não ficam salvos em servidores de terceiros. Tudo é armazenado criptografado no seu próprio navegador de forma segura.</p>
-            </div>
-        </div>
-    </section>
+<script>
+// 🔑 SEU TOKEN COMPLETO
+const TOKEN = "APP_USR-3214152190678820-080619-d1f43f0e8d917b1b48aaa84406169b18-3595156761";
+const API_URL = "https://api.mercadopago.com/v1/payments";
 
-    <section class="showcase">
-        <div class="showcase-container">
-            <div class="showcase-image">
-                <img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=600&q=80" alt="Gerenciando compras e finanças">
-            </div>
-            <div class="showcase-content">
-                <h2>Como funciona a dinâmica de compras?</h2>
-                <div class="step">
-                    <div class="step-num">1</div>
-                    <div class="step-text">
-                        <h4>Anote seus Itens</h4>
-                        <p>Abra a aba dedicada e digite o nome do produto e o preço gasto na hora.</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">2</div>
-                    <div class="step-text">
-                        <h4>Acompanhe a Soma Total</h4>
-                        <p>O sistema recalcula cada centavo instantaneamente exibindo o valor bruto em tempo real.</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">3</div>
-                    <div class="step-text">
-                        <h4>Baixe ou Abata</h4>
-                        <p>Exporte o seu comprovante impresso ou mande abater de forma integrada do saldo atual do seu fluxo de caixa.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+async function gerarPix() {
+    const descricao = document.getElementById('descricao').value.trim();
+    const valor = parseFloat(document.getElementById('valor').value);
+    const btn = document.getElementById('btnGerar');
+    const caixaErro = document.getElementById('caixaErro');
+    const caixaPix = document.getElementById('caixaPix');
 
-    <section class="pricing" id="preco">
-        <div class="section-title">
-            <h2>Invista no seu futuro financeiro hoje</h2>
-            <p>Acesso vitalício imediato. Sem mensalidades ocultas, sem anuidades.</p>
-        </div>
-        <div class="price-card">
-            <div class="badge">OFERTA EXCLUSIVA</div>
-            <h3>Plano Vitalício Pro</h3>
-            <div class="old-price">De R$ 97,90</div>
-            <div class="current-price">R$ 20,00 <span>à vista</span></div>
-            <ul class="price-features">
-                <li><i class="fas fa-check"></i> Acesso completo e irrestrito ao sistema</li>
-                <li><i class="fas fa-check"></i> Módulo de Lista de Compras Avançado</li>
-                <li><i class="fas fa-check"></i> Gráficos Dinâmicos em Tempo Real</li>
-                <li><i class="fas fa-check"></i> Download ilimitado de Comprovantes</li>
-                <li><i class="fas fa-check"></i> Sem taxas mensais ou renovações</li>
-            </ul>
-            
-            <a href="https://wa.me/5562996563279?text=Ol%C3%A1%21+Tenho+interesse+no+sistema+Finan%C3%A7as+2.0.+Como+fa%C3%A7o+para+adquirir+o+meu+acesso%3F" target="_blank" class="btn-buy">
-                <i class="fab fa-whatsapp"></i> GARANTIR 
-            </a>
-        </div>
-    </section>
+    caixaErro.style.display = 'none';
+    caixaPix.classList.remove('mostrar');
 
-    <section class="faq">
-        <div class="section-title">
-            <h2>Perguntas Frequentes</h2>
-        </div>
-        <div class="faq-item">
-            <button class="faq-trigger" onclick="toggleFaq(this)">Preciso pagar mensalidade? <i class="fas fa-chevron-down"></i></button>
-            <div class="faq-content">Não! O sistema funciona no modelo de pagamento único. Você compra uma vez e tem acesso livre e vitalício para sempre.</div>
-        </div>
-        <div class="faq-item">
-            <button class="faq-trigger" onclick="toggleFaq(this)">Onde meus dados financeiros ficam guardados? <i class="fas fa-chevron-down"></i></button>
-            <div class="faq-content">Sua privacidade é nossa prioridade absoluta. O Finanças 2.0 armazena todas as informações usando criptografia local no armazenamento do seu próprio navegador. Nenhum dado vai para a internet.</div>
-        </div>
-        <div class="faq-item">
-            <button class="faq-trigger" onclick="toggleFaq(this)">Consigo usar no celular? <i class="fas fa-chevron-down"></i></button>
-            <div class="faq-content">Sim! O código foi planejado de forma totalmente responsiva, se adaptando perfeitamente a telas de celulares, tablets, notebooks e computadores desktop.</div>
-        </div>
-    </section>
+    if (!descricao || !valor || valor <= 0) {
+        caixaErro.textContent = "⚠️ Preencha o nome e o valor!";
+        caixaErro.style.display = 'block';
+        return;
+    }
 
-    <footer>
-        <div class="footer-container">
-            <div>&copy; 2026 Finanças 2.0. Todos os direitos reservados.</div>
-            <div class="footer-links">
-                <a href="#">Termos de Uso</a>
-                <a href="#">Privacidade</a>
-                <a href="#preco">Suporte</a>
-            </div>
-        </div>
-    </footer>
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
 
-    <script>
-        // Lógica Dinâmica do Cronômetro
-        let tempoRestante = 2 * 60 * 60; 
+    try {
+        const resposta = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                transaction_amount: valor,
+                description: descricao,
+                payment_method_id: 'pix',
+                payer: { email: 'cliente@exemplo.com' }
+            })
+        });
 
-        function atualizarCronometro() {
-            let horas = Math.floor(tempoRestante / 3600);
-            let minutos = Math.floor((tempoRestante % 3600) / 60);
-            let segundos = tempoRestante % 60;
+        const dados = await resposta.json();
+        if (!resposta.ok) throw new Error(dados.message || 'Erro');
 
-            document.getElementById('horas').innerText = String(horas).padStart(2, '0');
-            document.getElementById('minutos').innerText = String(minutos).padStart(2, '0');
-            document.getElementById('segundos').innerText = String(segundos).padStart(2, '0');
+        const codigoPix = dados.point_of_interaction.transaction_data.qr_code;
+        const qrBase64 = dados.point_of_interaction.transaction_data.qr_code_base64;
 
-            if (tempoRestante > 0) {
-                tempoRestante--;
-            } else {
-                tempoRestante = 2 * 60 * 60; 
-            }
-        }
-        setInterval(atualizarCronometro, 1000);
-        atualizarCronometro();
+        document.getElementById('valorExibido').textContent = `R$ ${valor.toFixed(2).replace('.', ',')}`;
+        document.getElementById('codigoPix').textContent = codigoPix;
+        document.getElementById('qrCode').innerHTML = `<img src="data:image/png;base64,${qrBase64}" alt="QR Code">`;
+        caixaPix.classList.add('mostrar');
 
-        // Lógica Dinâmica do FAQ
-        function toggleFaq(elemento) {
-            const itemPai = elemento.parentElement;
-            const estaAtivo = itemPai.classList.contains('active');
-            
-            document.querySelectorAll('.faq-item').forEach(item => {
-                item.classList.remove('active');
-            });
+    } catch (erro) {
+        caixaErro.innerHTML = `❌ Erro: ${erro.message}<br>💡 Atualize a página e tente de novo!`;
+        caixaErro.style.display = 'block';
+    }
 
-            if (!estaAtivo) {
-                itemPai.classList.add('active');
-            }
-        }
-    </script>
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-magic"></i> Gerar Pix';
+}
+
+function copiarCodigo() {
+    const codigo = document.getElementById('codigoPix').textContent;
+    navigator.clipboard.writeText(codigo).then(() => {
+        alert("✅ Copiado! Cola no app do banco! 💰");
+    });
+}
+</script>
+
 </body>
 </html>
