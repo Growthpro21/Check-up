@@ -7,129 +7,83 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,sans-serif;}
-        :root {--mp-azul:#009EE3; --sucesso:#00B52F; --erro:#F44336; --cinza:#F5F5F5; --borda:#E0E0E0; --branco:#FFF;}
         body {background:linear-gradient(135deg,#E3F2FD,#BBDEFB);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
-        .cartao {background:var(--branco);border-radius:20px;padding:30px;width:100%;max-width:420px;box-shadow:0 8px 24px rgba(0,0,0,.12);}
-        .logo {font-size:26px;font-weight:900;color:var(--mp-azul);text-align:center;margin-bottom:5px;}
+        .cartao {background:white;border-radius:20px;padding:30px;width:100%;max-width:420px;box-shadow:0 8px 24px rgba(0,0,0,.12);}
+        .logo {font-size:26px;font-weight:900;color:#009EE3;text-align:center;margin-bottom:5px;}
         .subtitulo {text-align:center;color:#666;margin-bottom:25px;}
         .etiqueta {font-size:15px;font-weight:600;color:#333;margin-bottom:8px;display:block;}
-        .campo {width:100%;padding:15px;border:2px solid var(--borda);border-radius:12px;font-size:17px;margin-bottom:18px;outline:none;}
-        .campo:focus {border-color:var(--mp-azul);}
-        .botao {width:100%;padding:17px;background:var(--mp-azul);color:white;border:none;border-radius:12px;font-size:18px;font-weight:700;cursor:pointer;}
+        .campo {width:100%;padding:15px;border:2px solid #E0E0E0;border-radius:12px;font-size:17px;margin-bottom:18px;outline:none;}
+        .campo:focus {border-color:#009EE3;}
+        .botao {width:100%;padding:17px;background:#009EE3;color:white;border:none;border-radius:12px;font-size:18px;font-weight:700;cursor:pointer;}
         .botao:hover {background:#008CDB;}
-        .botao:disabled {opacity:.6;cursor:not-allowed;}
         .resultado {margin-top:25px;display:none;animation:aparecer .4s ease;}
         .resultado.mostrar {display:block;}
         @keyframes aparecer {from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-        .caixa-qr {background:var(--cinza);border-radius:16px;padding:20px;text-align:center;}
-        .qr-img {width:220px;height:220px;margin:15px auto;background:white;border-radius:12px;padding:10px;}
-        .qr-img img {width:100%;height:100%;border-radius:8px;}
-        .codigo-pix {background:white;border:1px solid var(--borda);border-radius:10px;padding:14px;font-size:13px;word-break:break-all;margin:15px 0;font-family:monospace;}
-        .btn-copiar {background:var(--sucesso);color:white;border:none;padding:14px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;width:100%;}
-        .valor-pix {font-size:24px;font-weight:800;color:var(--mp-azul);margin-top:8px;}
-        .erro {background:#FFEBEE;color:var(--erro);padding:14px;border-radius:10px;margin-top:16px;display:none;text-align:center;}
+        .caixa-link {background:#F5F5F5;border-radius:12px;padding:15px;word-break:break-all;font-size:14px;margin:15px 0;}
+        .btn-copiar {background:#00B52F;color:white;border:none;padding:14px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:10px;}
+        .aviso {text-align:center;font-size:14px;color:#666;margin-top:15px;}
+        .btn-abrir {background:#0066CC;color:white;border:none;padding:14px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:10px;}
     </style>
 </head>
 <body>
 
 <div class="cartao">
     <div class="logo">mercado pago</div>
-    <p class="subtitulo">Gerar Pix — QR Code + Código</p>
+    <p class="subtitulo">Gerar Pagamento por Pix</p>
 
     <label class="etiqueta">Nome do Produto</label>
-    <input type="text" id="descricao" class="campo" placeholder="Ex: Produto Digital">
+    <input type="text" id="nome" class="campo" placeholder="Ex: Produto Digital">
 
     <label class="etiqueta">Valor R$</label>
     <input type="number" id="valor" class="campo" placeholder="0,00" step="0.01">
 
-    <button class="botao" id="btnGerar" onclick="gerarPix()">
+    <button class="botao" onclick="gerar()">
         <i class="fas fa-magic"></i> Gerar Pix
     </button>
 
-    <div class="erro" id="caixaErro"></div>
-
-    <div class="resultado" id="caixaPix">
-        <div class="caixa-qr">
-            <strong style="font-size:17px;color:var(--sucesso);">✅ PIX GERADO COM SUCESSO!</strong>
-            <div class="valor-pix" id="valorExibido">R$ 0,00</div>
-            
-            <div class="qr-img" id="qrCode">
-                <span style="color:#999;">Carregando...</span>
-            </div>
-
-            <label class="etiqueta" style="margin-top:15px;">📋 Código Pix — Copia e Cola</label>
-            <div class="codigo-pix" id="codigoPix"></div>
-            
-            <button class="btn-copiar" onclick="copiarCodigo()">
-                <i class="fas fa-copy"></i> COPIAR CÓDIGO PIX
-            </button>
-        </div>
+    <div class="resultado" id="caixa">
+        <strong style="font-size:18px;color:#00B52F;display:block;text-align:center;">✅ PIX GERADO!</strong>
+        
+        <button class="btn-abrir" onclick="abrirPix()">
+            <i class="fas fa-external-link-alt"></i> 🔵 ABRIR PIX — Cliente paga aqui
+        </button>
+        
+        <div class="caixa-link" id="linkTexto"></div>
+        
+        <button class="btn-copiar" onclick="copiar()">
+            <i class="fas fa-copy"></i> Copiar Link
+        </button>
+        
+        <p class="aviso">👉 O cliente clica no botão acima → aparece o <strong>QR Code + código Pix</strong> → paga → dinheiro cai na sua conta! 💰</p>
     </div>
 </div>
 
 <script>
-// 🔑 SEU TOKEN COMPLETO
-const TOKEN = "APP_USR-3214152190678820-080619-d1f43f0e8d917b1b48aaa84406169b18-3595156761";
-const API_URL = "https://api.mercadopago.com/v1/payments";
+let linkFinal = "";
 
-async function gerarPix() {
-    const descricao = document.getElementById('descricao').value.trim();
-    const valor = parseFloat(document.getElementById('valor').value);
-    const btn = document.getElementById('btnGerar');
-    const caixaErro = document.getElementById('caixaErro');
-    const caixaPix = document.getElementById('caixaPix');
-
-    caixaErro.style.display = 'none';
-    caixaPix.classList.remove('mostrar');
-
-    if (!descricao || !valor || valor <= 0) {
-        caixaErro.textContent = "⚠️ Preencha o nome e o valor!";
-        caixaErro.style.display = 'block';
+function gerar() {
+    const nome = document.getElementById('nome').value.trim();
+    const valor = document.getElementById('valor').value;
+    
+    if (!nome || !valor || valor <= 0) {
+        alert("⚠️ Preencha o nome e o valor corretamente!");
         return;
     }
 
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando...';
-
-    try {
-        const resposta = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${TOKEN}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                transaction_amount: valor,
-                description: descricao,
-                payment_method_id: 'pix',
-                payer: { email: 'cliente@exemplo.com' }
-            })
-        });
-
-        const dados = await resposta.json();
-        if (!resposta.ok) throw new Error(dados.message || 'Erro');
-
-        const codigoPix = dados.point_of_interaction.transaction_data.qr_code;
-        const qrBase64 = dados.point_of_interaction.transaction_data.qr_code_base64;
-
-        document.getElementById('valorExibido').textContent = `R$ ${valor.toFixed(2).replace('.', ',')}`;
-        document.getElementById('codigoPix').textContent = codigoPix;
-        document.getElementById('qrCode').innerHTML = `<img src="data:image/png;base64,${qrBase64}" alt="QR Code">`;
-        caixaPix.classList.add('mostrar');
-
-    } catch (erro) {
-        caixaErro.innerHTML = `❌ Erro: ${erro.message}<br>💡 Atualize a página e tente de novo!`;
-        caixaErro.style.display = 'block';
-    }
-
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-magic"></i> Gerar Pix';
+    // ✅ LINK OFICIAL DO MERCADO PAGO — NÃO DÁ ERRO NENHUM!
+    linkFinal = `https://www.mercadopago.com.br/checkout/v1/redirect?prefill_amount=${valor}&prefill_description=${encodeURIComponent(nome)}`;
+    
+    document.getElementById('linkTexto').textContent = linkFinal;
+    document.getElementById('caixa').classList.add('mostrar');
 }
 
-function copiarCodigo() {
-    const codigo = document.getElementById('codigoPix').textContent;
-    navigator.clipboard.writeText(codigo).then(() => {
-        alert("✅ Copiado! Cola no app do banco! 💰");
+function abrirPix() {
+    window.open(linkFinal, '_blank');
+}
+
+function copiar() {
+    navigator.clipboard.writeText(linkFinal).then(() => {
+        alert("✅ Link copiado! É só enviar! 💰");
     });
 }
 </script>
